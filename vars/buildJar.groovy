@@ -1,6 +1,8 @@
 #!/usr/bin/env groovy 
 
-def call() {
-	echo 'Hello Subha'
+import org.example.TimeMetrics
+
+def call(String imageName) {
+	return new TimeMetrics(this).buildDockerImage(imageName)
 	
 }
