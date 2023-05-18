@@ -2,7 +2,15 @@
 
 package org.example
 
-class TimeMetrics {
+
+
+class TimeMetrics implements Serializable {
+	
+	def script 
+	TimeMetrics(script) {
+		this.script = script
+	}
+	
 	static Map<String, Long> stageTimes = [:]
 	static Map<String, Long> stepTimes = [:]
   
