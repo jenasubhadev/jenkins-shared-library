@@ -27,6 +27,7 @@ class TimeMetrics implements Serializable {
 	}
   
 	static void calculateStepTime(String stageName, String stepName, Closure closure) {
+	  println "Step '${stepName}'"
 	  def startTime = System.currentTimeMillis()
 	  closure.call()
 	  def endTime = System.currentTimeMillis()
