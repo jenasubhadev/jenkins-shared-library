@@ -26,12 +26,12 @@ class TimeMetrics implements Serializable {
 	  println "Stage '${stageName}' took ${duration} milliseconds"
 	}
   
-	static void calculateStepTime(String stepName, Closure closure) {
+	static void calculateStepTime(String stageName, String stepName, Closure closure) {
 	  def startTime = System.currentTimeMillis()
 	  closure.call()
 	  def endTime = System.currentTimeMillis()
 	  def duration = endTime - startTime
-	  stepTimes[stepName] = duration
+	  stepTimes[stageName][stepName] = duration
 	  println "Step '${stepName}' took ${duration} milliseconds"
 	}
 }
