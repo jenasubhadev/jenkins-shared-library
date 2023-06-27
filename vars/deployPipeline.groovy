@@ -3,19 +3,22 @@ def measureExecutionTime(Closure closure) {
     closure.call()
     def endTime = System.currentTimeMillis()
     def elapsedTime = endTime - startTime
-    println "Time taken: ${elapsedTime} milliseconds"
+    return elapsedTime
 }
 
 def call(String imageName) {
+    def timings = []
+
     pipeline {
         agent any
         stages {
             stage('Pull Docker Image') {
                 steps {
                     script {
-                        measureExecutionTime{
+                        def elapsedTime = measureExecutionTime {
                             sh "docker pull ${imageName}"
                         }
+                        timings << [stage: 'Pull Docker Image', time: elapsedTime]
                     }
                 }
             }
@@ -24,7 +27,7 @@ def call(String imageName) {
                 steps {
                     script {
                         def containerName = 'your-container-name'
-                        measureExecutionTime{
+                        def elapsedTime = measureExecutionTime {
                             sh "docker stop ${containerName} || true"
                             sh "docker rm ${containerName} || true"
 
@@ -33,14 +36,31 @@ def call(String imageName) {
 
                             sh "docker logs ${containerName}"
                         }
+                        timings << [stage: 'Run Docker Container', time: elapsedTime]
                     }
                 }
             }
 
             stage('Show Running Containers') {
                 steps {
-                    measureExecutionTime{
-                        sh 'docker ps -a'
+                    script {
+                        def elapsedTime = measureExecutionTime {
+                            sh 'docker ps -a'
+                        }
+                        timings << [stage: 'Show Running Containers', time: elapsedTime]
+                    }
+                }
+            }
+
+            stage('Print Timings') {
+                steps {
+                    script {
+                        def table = 'Stage\t\t\tTime (ms)\n'
+                        table += '--------------------------------\n'
+                        timings.each { timing ->
+                            table += "${timing.stage}\t\t${timing.time}\n"
+                        }
+                        println table
                     }
                 }
             }
