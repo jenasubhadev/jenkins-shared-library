@@ -1,11 +1,12 @@
+def measureExecutionTime(Closure closure) {
+    def startTime = System.currentTimeMillis()
+    closure.call()
+    def endTime = System.currentTimeMillis()
+    def elapsedTime = endTime - startTime
+    println "Time taken: ${elapsedTime} milliseconds"
+}
+
 def call(String imageName) {
-    def measureExecutionTime(Closure closure) {
-        def startTime = System.currentTimeMillis()
-        closure.call()
-        def endTime = System.currentTimeMillis()
-        def elapsedTime = endTime - startTime
-        println "Time taken: ${elapsedTime} milliseconds"
-    }
     pipeline {
         agent any
 
@@ -32,14 +33,3 @@ def call(String imageName) {
 
                         sh "docker logs ${containerName}"
                     }
-                }
-            }
-
-            stage('Show Running Containers') {
-                steps {
-                    sh 'docker ps -a'
-                }
-            }
-        }
-    }
-}
