@@ -1,4 +1,11 @@
 def call(String imageName) {
+    def measureExecutionTime(Closure closure) {
+        def startTime = System.currentTimeMillis()
+        closure.call()
+        def endTime = System.currentTimeMillis()
+        def elapsedTime = endTime - startTime
+        println "Time taken: ${elapsedTime} milliseconds"
+    }
     pipeline {
         agent any
 
@@ -6,7 +13,9 @@ def call(String imageName) {
             stage('Pull Docker Image') {
                 steps {
                     script {
-                        sh "docker pull ${imageName}"
+                        measureExecutionTime{
+                            sh "docker pull ${imageName}"
+                        }
                     }
                 }
             }
