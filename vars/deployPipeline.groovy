@@ -48,10 +48,10 @@ def call(String imageName) {
                             sh 'docker ps -a'
                         }
                         timings << [stage: 'Show Running Containers', time: elapsedTime]
-                         def elapsedTime = measureExecutionTime {
+                         def elapsedTime1 = measureExecutionTime {
                             sh 'docker pull tomcat'
                         }
-                        timings << [stage: 'Show Tomcat Pull', time: elapsedTime]
+                        timings << [stage: 'Show Tomcat Pull', time: elapsedTime1]
                     }
                 }
             }
