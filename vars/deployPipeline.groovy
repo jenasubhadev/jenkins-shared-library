@@ -5,11 +5,9 @@ def measureExecutionTime(Closure closure) {
     def elapsedTime = endTime - startTime
     println "Time taken: ${elapsedTime} milliseconds"
 }
-
 def call(String imageName) {
     pipeline {
         agent any
-
         stages {
             stage('Pull Docker Image') {
                 steps {
@@ -33,3 +31,14 @@ def call(String imageName) {
 
                         sh "docker logs ${containerName}"
                     }
+                }
+            }
+
+            stage('Show Running Containers') {
+                steps {
+                    sh 'docker ps -a'
+                }
+            }
+        }
+    }
+}
