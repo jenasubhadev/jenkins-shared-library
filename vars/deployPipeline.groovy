@@ -5,6 +5,7 @@ def measureExecutionTime(Closure closure) {
     def elapsedTime = endTime - startTime
     println "Time taken: ${elapsedTime} milliseconds"
 }
+
 def call(String imageName) {
     pipeline {
         agent any
@@ -23,20 +24,24 @@ def call(String imageName) {
                 steps {
                     script {
                         def containerName = 'your-container-name'
-                        sh "docker stop ${containerName} || true"
-                        sh "docker rm ${containerName} || true"
+                        measureExecutionTime{
+                            sh "docker stop ${containerName} || true"
+                            sh "docker rm ${containerName} || true"
 
-                        def dockerCmd = "docker run -d -p 80:80 --name ${containerName} ${imageName}"
-                        sh dockerCmd
+                            def dockerCmd = "docker run -d -p 80:80 --name ${containerName} ${imageName}"
+                            sh dockerCmd
 
-                        sh "docker logs ${containerName}"
+                            sh "docker logs ${containerName}"
+                        }
                     }
                 }
             }
 
             stage('Show Running Containers') {
                 steps {
-                    sh 'docker ps -a'
+                    measureExecutionTime{
+                        sh 'docker ps -a'
+                    }
                 }
             }
         }
